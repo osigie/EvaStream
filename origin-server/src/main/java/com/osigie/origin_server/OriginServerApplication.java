@@ -1,5 +1,4 @@
-package com.osigie.metadata_service;
-
+package com.osigie.origin_server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
