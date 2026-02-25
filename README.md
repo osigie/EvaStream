@@ -80,12 +80,16 @@ Stores full songs pre-split into fixed-size binary chunks and serves them over H
 
 ```
 GET /chunk?songId=X&chunkId=Y  → returns raw chunk bytes
+
 ```
 
 **Preprocessing Utility:**
 
 A standalone utility reads an MP3, splits it into fixed-size chunks, computes a SHA-256 hash per chunk, writes the `.bin` files, and registers the metadata with the Metadata Service.
 
+```bash
+POST /preprocess/upload  → process song
+```
 ---
 
 ### Phase 3 – Tracker Service
@@ -191,11 +195,7 @@ cd peer-node && mvn spring-boot:run -Dspring-boot.run.arguments="--peer.id=peer-
 cd peer-node && mvn spring-boot:run -Dspring-boot.run.arguments="--peer.id=peer-3 --peer.port=9003"
 ```
 
-**Preprocessing a song:**
 
-```bash
-java -jar preprocessor.jar --input=song.mp3 --songId=song-1 --chunkSize=262144
-```
 
 ---
 
