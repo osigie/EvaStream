@@ -12,22 +12,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/metadata")
 public class MetadataController {
     private final MetadataService songService;
+    private final SongMapper songMapper;
 
-    public MetadataController(MetadataService songService) {
+    public MetadataController(MetadataService songService, SongMapper songMapper) {
         this.songService = songService;
+        this.songMapper = songMapper;
     }
 
     @PostMapping
-    public ResponseEntity<SongDto> save(SongDto song) {
-        Song savedSong = this.songService.create(SongMapper.mapToSong(song, new Song()));
-        return new ResponseEntity<>(SongMapper.mapToSongDto(savedSong, new SongDto()), HttpStatus.CREATED);
+    public ResponseEntity<SongDto> save(@RequestBody SongDto song) {
+        Song savedSong = this.songService.create(songMapper.mapToSong(song));
+        return new ResponseEntity<>(songMapper.mapToSongDto(savedSong), HttpStatus.CREATED);
 
     }
 
     @GetMapping("{id}")
     public ResponseEntity<SongDto> findById(@PathVariable Long id) {
         Song song = this.songService.findById(id);
-        return new ResponseEntity<>(SongMapper.mapToSongDto(song, new SongDto()), HttpStatus.OK);
+        return new ResponseEntity<>(songMapper.mapToSongDto(song), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
