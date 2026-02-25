@@ -1,27 +1,51 @@
 package com.osigie.metadata_service.mapper;
 
 import com.osigie.metadata_service.domain.model.Song;
+import com.osigie.metadata_service.domain.model.SongChunk;
+import com.osigie.metadata_service.dto.SongChunkDto;
 import com.osigie.metadata_service.dto.SongDto;
+import org.springframework.stereotype.Component;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Component
 public class SongMapper {
-    public static SongDto mapToSongDto(Song entity, SongDto songDto) {
-        System.out.println(entity.getTitle());
-        songDto.setId(entity.getId());
-        songDto.setTitle(entity.getTitle());
-        songDto.setFileSize(entity.getFileSize());
-        songDto.setChunkCount(entity.getChunkCount());
-        songDto.setSongChunks(entity.getSongChunks());
-        return songDto;
+    public SongDto mapToSongDto(Song entity) {
+        SongDto dto = new SongDto();
+        dto.setId(entity.getId());
+        dto.setTitle(entity.getTitle());
+        dto.setFileSize(entity.getFileSize());
+        dto.setChunkCount(entity.getChunkCount());
+        Set<SongChunkDto> songChunkDto = entity.getSongChunks().stream().map(ch -> {
+            SongChunkDto dtoSongChunk = new SongChunkDto();
+            dtoSongChunk.setHash(ch.getHash());
+            return dtoSongChunk;
+        }).collect(Collectors.toSet());
+        dto.setSongChunks(songChunkDto);
+
+        return dto;
 
     }
 
-    public static Song mapToSong(SongDto songDto, Song song) {
-        System.out.println(songDto.getTitle());
-        song.setChunkCount(songDto.getChunkCount());
-        song.setSongChunks(songDto.getSongChunks());
-        song.setFileSize(songDto.getFileSize());
-        song.setSongChunks(songDto.getSongChunks());
-        song.setTitle(songDto.getTitle());
+    public Song mapToSong(SongDto songDto) {
+
+        Song song = Song.builder()
+                .title(songDto.getTitle())
+                .fileSize(songDto.getFileSize())
+                .chunkCount(songDto.getChunkCount())
+                .chunkSize(songDto.getChunkSize())
+                .build();
+
+        Set<SongChunk> songChunks =
+                songDto.getSongChunks().stream().map(ch -> SongChunk.builder()
+                        .hash(ch.getHash())
+                        .song(song)
+                        .build()
+                ).collect(Collectors.toSet());
+
+        song.setSongChunks(songChunks);
+
         return song;
     }
 }
