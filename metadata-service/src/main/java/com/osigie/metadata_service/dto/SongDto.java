@@ -1,6 +1,5 @@
 package com.osigie.metadata_service.dto;
 
-import com.osigie.metadata_service.domain.model.SongChunk;
 import lombok.Data;
 
 import java.util.Set;
@@ -18,5 +17,5 @@ public class SongDto {
 
     private long chunkCount;
 
-    private Set<SongChunk> songChunks;
+    private Set<SongChunkDto> songChunks;
 }

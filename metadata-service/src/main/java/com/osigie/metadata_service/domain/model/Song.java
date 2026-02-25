@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "songs")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Song extends BaseModel {
 
     private String title;
@@ -25,7 +25,7 @@ public class Song extends BaseModel {
     @Column(name = "chunk_count")
     private long chunkCount;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "song")
     private Set<SongChunk> songChunks = new HashSet<SongChunk>();
 
     @Builder
