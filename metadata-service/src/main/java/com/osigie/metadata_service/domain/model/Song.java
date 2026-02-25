@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "songs")
@@ -29,11 +30,12 @@ public class Song extends BaseModel {
     private Set<SongChunk> songChunks = new HashSet<SongChunk>();
 
     @Builder
-    public Song(String title, long fileSize, long chunkSize, long chunkCount) {
+    public Song(String title, long fileSize, long chunkSize, long chunkCount, UUID id) {
         this.title = title;
         this.fileSize = fileSize;
         this.chunkSize = chunkSize;
         this.chunkCount = chunkCount;
+        this.setId(id);
     }
 
 }

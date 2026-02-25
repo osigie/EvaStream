@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping(path = "/metadata")
 public class MetadataController {
@@ -27,13 +29,13 @@ public class MetadataController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<SongDto> findById(@PathVariable Long id) {
+    public ResponseEntity<SongDto> findById(@PathVariable UUID id) {
         Song song = this.songService.findById(id);
         return new ResponseEntity<>(songMapper.mapToSongDto(song), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable UUID id) {
         this.songService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

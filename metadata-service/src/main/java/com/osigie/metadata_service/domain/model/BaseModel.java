@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @MappedSuperclass
 @Getter
@@ -15,10 +16,8 @@ import java.time.LocalDateTime;
 public class BaseModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.PROTECTED)
     @Column(updatable = false, nullable = false)
-    private Long id;
+    private UUID id;
 
     @Column(nullable = false, updatable = false, name = "created_at")
     private LocalDateTime createAt;
@@ -28,6 +27,9 @@ public class BaseModel {
 
     @PrePersist
     public void prePersist() {
+        if (this.getId() == null) {
+            this.setId(UUID.randomUUID());
+        }
         this.createAt = LocalDateTime.now();
         this.updateAt = this.createAt;
     }

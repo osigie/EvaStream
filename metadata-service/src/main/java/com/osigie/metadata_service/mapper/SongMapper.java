@@ -17,9 +17,12 @@ public class SongMapper {
         dto.setTitle(entity.getTitle());
         dto.setFileSize(entity.getFileSize());
         dto.setChunkCount(entity.getChunkCount());
+        dto.setChunkSize(entity.getChunkSize());
         Set<SongChunkDto> songChunkDto = entity.getSongChunks().stream().map(ch -> {
             SongChunkDto dtoSongChunk = new SongChunkDto();
             dtoSongChunk.setHash(ch.getHash());
+            dtoSongChunk.setIndex(ch.getIndex());
+            dtoSongChunk.setId(ch.getId());
             return dtoSongChunk;
         }).collect(Collectors.toSet());
         dto.setSongChunks(songChunkDto);
@@ -35,12 +38,15 @@ public class SongMapper {
                 .fileSize(songDto.getFileSize())
                 .chunkCount(songDto.getChunkCount())
                 .chunkSize(songDto.getChunkSize())
+                .id(songDto.getId())
                 .build();
 
         Set<SongChunk> songChunks =
                 songDto.getSongChunks().stream().map(ch -> SongChunk.builder()
                         .hash(ch.getHash())
+                        .index(ch.getIndex())
                         .song(song)
+                        .id(ch.getId())
                         .build()
                 ).collect(Collectors.toSet());
 

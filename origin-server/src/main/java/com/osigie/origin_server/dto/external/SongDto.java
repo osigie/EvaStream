@@ -1,4 +1,4 @@
-package com.osigie.metadata_service.dto;
+package com.osigie.origin_server.dto.external;
 
 import lombok.Data;
 
