@@ -3,11 +3,12 @@ package com.osigie.metadata_service.dto;
 import lombok.Data;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 public class SongDto {
 
-    private Long id;
+    private UUID id;
 
     private String title;
 
