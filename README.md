@@ -1,4 +1,4 @@
-# HStream
+# EvaStream
 
 A hybrid peer-to-peer streaming system built with Java and Spring Boot. HStream reduces origin server bandwidth by enabling peers to serve chunks to one another, while falling back to a central origin server when needed.
 
