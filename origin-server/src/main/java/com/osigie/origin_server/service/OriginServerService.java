@@ -1,9 +1,10 @@
 package com.osigie.origin_server.service;
 
-import com.osigie.origin_server.model.Chunk;
+
+import java.util.UUID;
 
 public interface OriginServerService {
 
-    Chunk fetchChunk(Long songId, Long chunkId);
+    byte[] fetchChunk(UUID songId, UUID chunkId);
 
 }

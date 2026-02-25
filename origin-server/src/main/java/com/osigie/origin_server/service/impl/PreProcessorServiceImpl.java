@@ -6,6 +6,7 @@ import com.osigie.origin_server.dto.request.UploadDto;
 import com.osigie.origin_server.model.Chunk;
 import com.osigie.origin_server.service.PreProcessorService;
 import com.osigie.origin_server.service.external.MetadataService;
+import com.osigie.origin_server.util.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -90,7 +91,7 @@ public class PreProcessorServiceImpl implements PreProcessorService {
     private void saveOriginStorage(UUID songId, List<Chunk> chunks) throws IOException {
         //create song directory
 
-        Path songDirectoryPath = Files.createDirectories(Path.of("./origin-storage/" + songId.toString()));
+        Path songDirectoryPath = Files.createDirectories(Path.of(Constant.ORIGIN_STORAGE_PATH + songId.toString()));
 
         //then I can start saving the chunks in the directory
 
