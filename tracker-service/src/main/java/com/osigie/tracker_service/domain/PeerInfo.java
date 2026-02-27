@@ -6,8 +6,8 @@ import java.util.UUID;
 
 @Data
 public class PeerInfo {
-    UUID peerId;
-    String host;
-    int port;
-    long lastHeartbeat;
+    private String peerId;
+    private String host;
+    private int port;
+    private long lastHeartbeat;
 }

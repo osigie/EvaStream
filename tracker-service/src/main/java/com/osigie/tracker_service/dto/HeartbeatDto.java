@@ -4,8 +4,6 @@ import lombok.Data;
 
 
 @Data
-public class RegisterDto {
+public class HeartbeatDto {
     private String peerId;
-    private String host;
-    private int port;
 }
