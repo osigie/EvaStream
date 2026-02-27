@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 
@@ -44,7 +47,7 @@ public class TrackerClient {
         return response.thenApply(HttpResponse::body);
     }
 
-    public CompletableFuture<String> heartbeat(String peerId) {
+    private CompletableFuture<String> heartbeat(String peerId) {
         Map<String, String> peerMap = new HashMap<>();
         peerMap.put("peerId", peerId);
         ObjectMapper mapper = new ObjectMapper();
@@ -96,5 +99,17 @@ public class TrackerClient {
         return response.thenApply(HttpResponse::body);
     }
 
+
+    public void heartbeatRunner(String peerId) {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+
+        executor.scheduleAtFixedRate(() -> {
+            this.heartbeat(peerId);
+        }, 1, 5, TimeUnit.SECONDS);
+
+
+        LOG.info("heartbeat runner request sent ....");
+
+    }
 
 }

@@ -33,7 +33,6 @@ public class PeerNode {
                 }).join();
 
 
-
         UUID chunkId = UUID.randomUUID();
         UUID songId = UUID.randomUUID();
 
@@ -48,12 +47,12 @@ public class PeerNode {
                 }).join();
 
 
-        trackerClient.heartbeat(peerInfo.peerId())
-                .thenAccept(System.out::println)
-                .exceptionally(e -> {
-                    System.out.println(e.getMessage());
-                    return null;
-                }).join();
+//        trackerClient.heartbeat(peerInfo.peerId())
+//                .thenAccept(System.out::println)
+//                .exceptionally(e -> {
+//                    System.out.println(e.getMessage());
+//                    return null;
+//                }).join();
 
 
 ////Origin Client
@@ -73,6 +72,8 @@ public class PeerNode {
                     return null;
                 }).join();
 
+
+        trackerClient.heartbeatRunner(peerInfo.peerId());
     }
 
 }
