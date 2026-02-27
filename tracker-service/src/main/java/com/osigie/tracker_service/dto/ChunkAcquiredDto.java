@@ -6,7 +6,7 @@ import java.util.UUID;
 
 @Data
 public class ChunkAcquiredDto {
-    UUID peerId;
-    UUID songId;
-    UUID chunkId;
+    private String peerId;
+    private UUID songId;
+    private UUID chunkId;
 }
