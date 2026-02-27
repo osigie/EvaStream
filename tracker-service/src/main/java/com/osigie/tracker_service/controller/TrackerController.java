@@ -29,13 +29,13 @@ public class TrackerController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         this.trackerService.register(trackerMapper.mapToPeerInfo(registerDto));
-        return new ResponseEntity<>("Success", HttpStatus.CREATED);
+        return new ResponseEntity<>("Successfully registered", HttpStatus.CREATED);
     }
 
     @PostMapping("/heartbeat")
     public ResponseEntity<String> heartbeat(@RequestBody HeartbeatDto heartbeatDto) {
         this.trackerService.heartbeat(heartbeatDto.getPeerId());
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseEntity<>("Successfully sent a heartbeat", HttpStatus.OK);
     }
 
     @GetMapping("/peers")
@@ -47,6 +47,6 @@ public class TrackerController {
     @PostMapping("/chunk-acquired")
     public ResponseEntity<String> chunkAcquired(@RequestBody ChunkAcquiredDto chunkAcquiredDto) {
         this.trackerService.chunkAcquired(chunkAcquiredDto);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+        return new ResponseEntity<>("Successfully sent acquired chunk", HttpStatus.OK);
     }
 }
