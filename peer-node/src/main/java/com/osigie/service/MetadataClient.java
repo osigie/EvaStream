@@ -1,12 +1,14 @@
 package com.osigie.service;
 
 
+import utils.HttpClientInstance;
+
 public class MetadataClient {
 
-    private final HttpClient client;
+    private final HttpClientInstance client;
 
-    public MetadataClient(HttpClient httpClient) {
-        client = httpClient;
+    public MetadataClient(HttpClientInstance httpClientInstance) {
+        client = httpClientInstance;
     }
 
     public void getMetadata() {
