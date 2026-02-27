@@ -42,8 +42,6 @@ public class TrackerClient {
         LOG.info("registration request sent ....");
 
         return response.thenApply(HttpResponse::body);
-
-
     }
 
     public CompletableFuture<String> heartbeat(String peerId) {
