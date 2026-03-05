@@ -1,4 +1,4 @@
-package com.osigie.service;
+package com.osigie.service.clients;
 
 import com.osigie.domain.ChunkAcquired;
 import com.osigie.domain.PeerInfo;

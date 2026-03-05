@@ -1,4 +1,4 @@
-package com.osigie.service;
+package com.osigie.service.clients;
 
 import java.net.URI;
 import java.net.http.HttpClient;
