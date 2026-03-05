@@ -11,12 +11,13 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 public class PeerClient {
 
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-    public void requestChunk(String host, int port, String songId, String chunkId, Runnable onComplete) {
+    public void requestChunk(String host, int port, String songId, String chunkId, Consumer<byte[]> onComplete) {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap
                 .group(workerGroup)
