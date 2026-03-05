@@ -79,15 +79,4 @@ public class SongDto {
         this.songChunks = songChunks;
     }
 
-    @Override
-    public String toString() {
-        return "SongDto{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", fileSize=" + fileSize +
-                ", chunkSize=" + chunkSize +
-                ", chunkCount=" + chunkCount +
-                ", songChunks=" + songChunks +
-                '}';
-    }
 }
