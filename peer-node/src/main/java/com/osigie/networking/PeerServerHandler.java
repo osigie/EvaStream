@@ -31,7 +31,7 @@ public class PeerServerHandler extends ChannelInboundHandlerAdapter {
         String songId = parts[1];
         String chunkId = parts[2];
 
-        byte[] chunk = this.chunkStore.loadChunk(peerId, songId, chunkId);
+        byte[] chunk = this.chunkStore.loadChunk(songId, chunkId);
 
         if (chunk == null) {
             ctx.writeAndFlush(Unpooled.copiedBuffer("NOT_FOUND\n".getBytes()));

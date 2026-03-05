@@ -1,4 +1,4 @@
-package com.osigie.service;
+package com.osigie.service.clients;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -20,7 +20,7 @@ public class OriginClient {
     }
 
 
-    public CompletableFuture<String> fetchChunk(String chunkId, String songId) {
+    public CompletableFuture<byte[]> fetchChunk(String chunkId, String songId) {
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(baseURL + "/chunk?songId=" + songId + "&chunkId=" + chunkId))
@@ -28,30 +28,14 @@ public class OriginClient {
                 .header("Content-Type", "application/octet-stream")
                 .build();
 
-        CompletableFuture<HttpResponse<String>> response = client
-                .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString());
+        CompletableFuture<HttpResponse<byte[]>> response = client
+                .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofByteArray());
 
         LOG.info("get chunk request sent ....");
 
-        return response.thenApply(HttpResponse::body);
+        return response.thenApply((HttpResponse::body));
 
 
     }
 
-    public CompletableFuture<String> fetchChunk(UUID chunkId, UUID songId) {
-
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(baseURL + "/chunk?songId=" + songId.toString() + "&chunkId=" + chunkId.toString()))
-                .GET()
-                .build();
-
-        CompletableFuture<HttpResponse<String>> response = client
-                .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-        LOG.info("get chunk request sent ....");
-
-        return response.thenApply(HttpResponse::body);
-
-
-    }
 }

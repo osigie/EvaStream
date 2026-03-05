@@ -4,14 +4,6 @@ package com.osigie.domain;
 import java.util.UUID;
 
 public class SongChunkDto {
-    @Override
-    public String toString() {
-        return "SongChunkDto{" +
-                "id=" + id +
-                ", hash='" + hash + '\'' +
-                ", index=" + index +
-                '}';
-    }
 
     private UUID id;
     private String hash;
