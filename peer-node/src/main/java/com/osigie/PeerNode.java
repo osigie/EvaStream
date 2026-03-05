@@ -10,7 +10,6 @@ import com.osigie.service.clients.OriginClient;
 import com.osigie.service.clients.TrackerClient;
 import utils.HttpClientInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PeerNode {
@@ -18,7 +17,7 @@ public class PeerNode {
     //    TODO: pass through env or variable
     private static final String peerId = "peer-001";
     private static final int port = 9000;
-    private static final String songId = "535ef1f1-8592-419f-8e4d-2fb85fcb264c";
+    private static final String songId = "c8f22bff-2504-464b-bfcc-8164c0de4c78";
 
     public static void main(String[] args) throws InterruptedException {
         /**
@@ -26,16 +25,17 @@ public class PeerNode {
          * 5. I might have to rearrange the file from the chunk or just do nothing
          * */
 
-        ChunkStore chunkStore = new ChunkStore();
+        ChunkStore chunkStore = new ChunkStore(peerId);
         PeerServer server = new PeerServer(port, chunkStore, peerId);
         server.start();
 
         MetadataClient metadataClient = new MetadataClient(HttpClientInstance.getInstance());
-        Scheduler scheduler = new Scheduler();
         OriginClient originClient = new OriginClient(HttpClientInstance.getInstance());
         TrackerClient trackerClient = new TrackerClient(HttpClientInstance.getInstance());
+        PeerClient peerClient = new PeerClient();
 
-        DownloadCoordinator coordinator = new DownloadCoordinator(metadataClient, scheduler, chunkStore, originClient);
+        Scheduler scheduler = new Scheduler(trackerClient, originClient, peerClient, chunkStore);
+        DownloadCoordinator coordinator = new DownloadCoordinator(metadataClient, scheduler, chunkStore, peerId);
 
         coordinator.start(List.of(songId));
 
