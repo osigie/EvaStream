@@ -190,10 +190,14 @@ cd tracker-service && mvn spring-boot:run
 cd origin-server && mvn spring-boot:run
 
 # 4. Peer Nodes (run 3 or more)
-cd peer-node && mvn spring-boot:run -Dspring-boot.run.arguments="--peer.id=peer-1 --peer.port=9001"
-cd peer-node && mvn spring-boot:run -Dspring-boot.run.arguments="--peer.id=peer-2 --peer.port=9002"
-cd peer-node && mvn spring-boot:run -Dspring-boot.run.arguments="--peer.id=peer-3 --peer.port=9003"
+cd peer-node && mvn compile
+
+mvn exec:java -Dpeer.id=peer-1 -Dpeer.port=9001 -Dsong.id=
+mvn exec:java -Dpeer.id=peer-2 -Dpeer.port=9002 -Dsong.id=
+mvn exec:java -Dpeer.id=peer-3 -Dpeer.port=9003 -Dsong.id=
+
 ```
+
 
 
 
