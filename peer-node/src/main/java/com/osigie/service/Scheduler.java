@@ -34,7 +34,7 @@ public class Scheduler {
 
         return CompletableFuture
                 .allOf(futures.toArray(new CompletableFuture[0]))
-                .thenApply((_) -> localChunks);
+                .thenApply((a) -> localChunks);
     }
 
     private CompletableFuture<Void> fetchChunk(SongChunkDto chunk, String songId, TreeSet<SongChunkDto> localChunks) {

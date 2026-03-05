@@ -14,12 +14,12 @@ import java.util.List;
 
 public class PeerNode {
 
-    //    TODO: pass through env or variable
-    private static final String peerId = "peer-001";
-    private static final int port = 9000;
-    private static final String songId = "c8f22bff-2504-464b-bfcc-8164c0de4c78";
-
     public static void main(String[] args) throws InterruptedException {
+
+        String peerId = System.getProperty("peer.id", "default-peer");
+        String songId = System.getProperty("song.id", "");
+        int port = Integer.parseInt(System.getProperty("peer.port", "9000"));
+
         /**
          * 1. Start up upload server
          * 5. I might have to rearrange the file from the chunk or just do nothing
