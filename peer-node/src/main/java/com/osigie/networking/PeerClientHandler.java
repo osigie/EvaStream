@@ -6,16 +6,17 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 
 public class PeerClientHandler extends ChannelInboundHandlerAdapter {
     private final String songId;
     private final String chunkId;
-    private final Runnable onComplete;
+    private final Consumer<byte[]> onComplete;
 
     private int expectedSize;
     private ByteBuf buffer;
 
-    public PeerClientHandler(String songId, String chunkId, Runnable onComplete) {
+    public PeerClientHandler(String songId, String chunkId, Consumer<byte[]> onComplete) {
         this.songId = songId;
         this.chunkId = chunkId;
         this.onComplete = onComplete;
@@ -46,7 +47,7 @@ public class PeerClientHandler extends ChannelInboundHandlerAdapter {
                 byte[] chunkData = new byte[expectedSize];
                 buffer.readBytes(chunkData);
                 System.out.println("Chunk received: " + chunkData.length + " bytes");
-                onComplete.run();
+                onComplete.accept(chunkData);
                 ctx.close();
             }
         }
