@@ -23,18 +23,17 @@ public class MetadataClient {
         client = httpClient;
     }
 
-    //    TODO:change to uuid
-    public CompletableFuture<SongDto> getMetadata(UUID songId) {
+    public CompletableFuture<SongDto> getMetadata(String songId) {
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(baseURL + "/" + songId.toString()))
+                .uri(URI.create(baseURL + "/" + songId))
                 .GET()
                 .build();
 
         CompletableFuture<HttpResponse<String>> response = client
                 .sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-        LOG.info("get chunk request sent ....");
+        LOG.info("Get song request sent ....");
 
         ObjectMapper mapper = new ObjectMapper();
         return response

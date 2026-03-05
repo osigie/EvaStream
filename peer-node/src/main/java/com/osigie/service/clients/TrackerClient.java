@@ -2,6 +2,7 @@ package com.osigie.service.clients;
 
 import com.osigie.domain.ChunkAcquired;
 import com.osigie.domain.PeerInfo;
+import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.net.URI;
@@ -67,9 +68,9 @@ public class TrackerClient {
     }
 
 
-    public CompletableFuture<String> getPeers(UUID songId) {
+    public CompletableFuture<Map<UUID, Map<String, PeerInfo>>> getPeers(String songId) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
-                .uri(URI.create(baseURL + "/peers?songId=" + songId.toString()))
+                .uri(URI.create(baseURL + "/peers?songId=" + songId))
                 .GET()
                 .build();
 
@@ -78,7 +79,13 @@ public class TrackerClient {
 
         LOG.info("get peers request sent ....");
 
-        return response.thenApply(HttpResponse::body);
+        ObjectMapper mapper = new ObjectMapper();
+
+        //chunkId -> peerId -> peerInfo
+        return response
+                .thenApply((r) -> mapper
+                        .readValue(r.body(), new TypeReference<Map<UUID, Map<String, PeerInfo>>>() {
+                        }));
     }
 
     public CompletableFuture<String> notifyChuckAcquired(ChunkAcquired chunkAcquired) {
