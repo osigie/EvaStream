@@ -48,6 +48,7 @@ public class Scheduler {
 
                     return fetchFromPeers(chunk, songId, localChunks, chunkPeerMap)
                             .thenCompose(downloaded -> {
+                                System.out.println("Downloaded: " + downloaded);
                                 if (!downloaded) {
                                     return fetchFromOrigin(chunk, songId, localChunks);
                                 }
