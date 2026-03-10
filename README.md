@@ -36,7 +36,7 @@ A hybrid peer-to-peer streaming system built with Java and Spring Boot. HStream 
 | Metadata Service | `8081`         | Spring Boot, H2, JPA            |
 | Tracker Service  | `8082`         | Spring Boot, in-memory          |
 | Origin Server    | `8083`         | Spring Boot, file storage       |
-| Peer Node(s)     | dynamic        | Spring Boot + TCP upload server |
+| Peer Node(s)     | dynamic        | TCP, Upload / Download
 
 ---
 
