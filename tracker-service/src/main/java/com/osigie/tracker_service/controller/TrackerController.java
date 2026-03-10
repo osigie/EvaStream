@@ -7,8 +7,10 @@ import com.osigie.tracker_service.dto.HeartbeatDto;
 import com.osigie.tracker_service.dto.RegisterDto;
 import com.osigie.tracker_service.mapper.TrackerMapper;
 import com.osigie.tracker_service.service.TrackerService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,6 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/tracker")
+@Validated
 public class TrackerController {
     private final TrackerService trackerService;
     private final TrackerMapper trackerMapper;
@@ -27,13 +30,13 @@ public class TrackerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto) {
         this.trackerService.register(trackerMapper.mapToPeerInfo(registerDto));
         return new ResponseEntity<>("Successfully registered", HttpStatus.CREATED);
     }
 
     @PostMapping("/heartbeat")
-    public ResponseEntity<String> heartbeat(@RequestBody HeartbeatDto heartbeatDto) {
+    public ResponseEntity<String> heartbeat(@Valid @RequestBody HeartbeatDto heartbeatDto) {
         this.trackerService.heartbeat(heartbeatDto.getPeerId());
         return new ResponseEntity<>("Successfully sent a heartbeat", HttpStatus.OK);
     }
@@ -45,7 +48,7 @@ public class TrackerController {
 
 
     @PostMapping("/chunk-acquired")
-    public ResponseEntity<String> chunkAcquired(@RequestBody ChunkAcquiredDto chunkAcquiredDto) {
+    public ResponseEntity<String> chunkAcquired(@Valid @RequestBody ChunkAcquiredDto chunkAcquiredDto) {
         this.trackerService.chunkAcquired(chunkAcquiredDto);
         return new ResponseEntity<>("Successfully sent acquired chunk", HttpStatus.OK);
     }

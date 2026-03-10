@@ -2,14 +2,17 @@ package com.osigie.origin_server.controller;
 
 import com.osigie.origin_server.dto.request.UploadDto;
 import com.osigie.origin_server.service.PreProcessorService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/preprocess")
+@Validated
 public class PreProcessorController {
     private final PreProcessorService preProcessorService;
 
@@ -19,7 +22,7 @@ public class PreProcessorController {
 
 
     @PostMapping(value = "upload", consumes = "multipart/form-data")
-    public ResponseEntity<String> upload(@ModelAttribute UploadDto dto) {
+    public ResponseEntity<String> upload(@Valid @ModelAttribute UploadDto dto) {
         UUID id = preProcessorService.process(dto);
         return new ResponseEntity<>("File uploaded and processed successfully with id: " + id.toString(), HttpStatus.OK);
     }

@@ -3,6 +3,7 @@ package com.osigie.origin_server.service.impl;
 import com.osigie.origin_server.dto.external.SongChunkDto;
 import com.osigie.origin_server.dto.external.SongDto;
 import com.osigie.origin_server.dto.request.UploadDto;
+import com.osigie.origin_server.exceptions.FileProcessorExceptions;
 import com.osigie.origin_server.model.Chunk;
 import com.osigie.origin_server.service.PreProcessorService;
 import com.osigie.origin_server.service.external.MetadataService;
@@ -51,7 +52,7 @@ public class PreProcessorServiceImpl implements PreProcessorService {
             return this.forwardSong(dto.getTitle(), dto.getFile().getSize(), chunk_size, chunks);
 
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while processing the file");
+            throw new FileProcessorExceptions("An error occurred while processing the file");
         }
     }
 
@@ -81,7 +82,7 @@ public class PreProcessorServiceImpl implements PreProcessorService {
         try {
             this.saveOriginStorage(savedSong.getId(), chunks);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessorExceptions("An error occurred while saving the song");
         }
 
         return savedSong.getId();
@@ -100,7 +101,7 @@ public class PreProcessorServiceImpl implements PreProcessorService {
                 Path chunkFilePath = songDirectoryPath.resolve(chunk.getId().toString() + ".bin");
                 Files.write(chunkFilePath, chunk.getChunk());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new FileProcessorExceptions("An error occurred while saving the chunk to storage");
             }
         });
     }
@@ -129,7 +130,7 @@ public class PreProcessorServiceImpl implements PreProcessorService {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new FileProcessorExceptions("An error occurred while hashing the data");
         }
     }
 }

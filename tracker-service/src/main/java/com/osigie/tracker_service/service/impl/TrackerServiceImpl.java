@@ -2,6 +2,7 @@ package com.osigie.tracker_service.service.impl;
 
 import com.osigie.tracker_service.domain.PeerInfo;
 import com.osigie.tracker_service.dto.ChunkAcquiredDto;
+import com.osigie.tracker_service.exceptions.PeerNotRegisteredException;
 import com.osigie.tracker_service.service.TrackerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -67,7 +68,7 @@ public class TrackerServiceImpl implements TrackerService {
         boolean hasPeerRegistered = peerRegistry.containsKey(dto.getPeerId());
 
         if (!hasPeerRegistered) {
-            throw new RuntimeException("Peer not registered");
+            throw new PeerNotRegisteredException(dto.getPeerId());
         }
         songChunkMap
                 .computeIfAbsent(dto.getSongId(), k -> new ConcurrentHashMap<>())
