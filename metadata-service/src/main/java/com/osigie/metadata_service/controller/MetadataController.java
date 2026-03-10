@@ -4,14 +4,17 @@ import com.osigie.metadata_service.domain.model.Song;
 import com.osigie.metadata_service.dto.SongDto;
 import com.osigie.metadata_service.mapper.SongMapper;
 import com.osigie.metadata_service.service.MetadataService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/metadata")
+@Validated
 public class MetadataController {
     private final MetadataService songService;
     private final SongMapper songMapper;
@@ -22,7 +25,7 @@ public class MetadataController {
     }
 
     @PostMapping
-    public ResponseEntity<SongDto> save(@RequestBody SongDto song) {
+    public ResponseEntity<SongDto> save(@Valid @RequestBody SongDto song) {
         Song savedSong = this.songService.create(songMapper.mapToSong(song));
         return new ResponseEntity<>(songMapper.mapToSongDto(savedSong), HttpStatus.CREATED);
 

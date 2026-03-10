@@ -1,6 +1,7 @@
 package com.osigie.metadata_service.service.impl;
 
 import com.osigie.metadata_service.domain.model.Song;
+import com.osigie.metadata_service.exceptions.ResourceNotFoundException;
 import com.osigie.metadata_service.repository.SongRepository;
 import com.osigie.metadata_service.service.MetadataService;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,6 @@ public class MetadataServiceImpl implements MetadataService {
 
     @Override
     public Song findById(UUID id) {
-        return this.songRepository.findById(id).orElseThrow(() -> new RuntimeException("Song not found"));
+        return this.songRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Song", "id", id.toString()));
     }
 }
