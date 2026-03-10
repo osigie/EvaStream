@@ -45,14 +45,13 @@ public class ChunkStore {
         }
     }
 
-    public List<byte[]> loadChunk(TreeSet<SongChunkDto> chunks, String peerId, String songId) {
+    public List<byte[]> loadChunk(TreeSet<SongChunkDto> chunks, String songId) {
         //TODO: spin multiple threads
         List<byte[]> result = new ArrayList<>();
 
         chunks.forEach((chunk) -> result.add(this.loadChunk(songId, chunk.getId().toString())));
         return result;
     }
-
 
     private void saveOriginStorage(String songId, Chunk chunk) {
         try {
