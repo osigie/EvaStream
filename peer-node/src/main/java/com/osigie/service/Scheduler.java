@@ -140,6 +140,7 @@ public class Scheduler {
 
 
     private CompletableFuture<Void> chunkAcquired(PeerInfo peerInfo, UUID chunkId, String songId) {
+//        TODO: simplify this to auto register when chunk is acquired
         return trackerClient.register(peerInfo)
                 .thenCompose(registered -> {
                     System.out.println("Peer with id " + peerInfo.peerId() + " " + registered);
