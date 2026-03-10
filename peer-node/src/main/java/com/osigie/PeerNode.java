@@ -26,7 +26,7 @@ public class PeerNode {
          * */
 
         ChunkStore chunkStore = new ChunkStore(peerId);
-        PeerServer server = new PeerServer(port, chunkStore, peerId);
+        PeerServer server = new PeerServer(port, chunkStore);
         server.start();
 
         MetadataClient metadataClient = new MetadataClient(HttpClientInstance.getInstance());
@@ -34,8 +34,8 @@ public class PeerNode {
         TrackerClient trackerClient = new TrackerClient(HttpClientInstance.getInstance());
         PeerClient peerClient = new PeerClient();
 
-        Scheduler scheduler = new Scheduler(trackerClient, originClient, peerClient, chunkStore);
-        DownloadCoordinator coordinator = new DownloadCoordinator(metadataClient, scheduler, chunkStore, peerId);
+        Scheduler scheduler = new Scheduler(trackerClient, originClient, peerClient, chunkStore, peerId, port);
+        DownloadCoordinator coordinator = new DownloadCoordinator(metadataClient, scheduler, chunkStore, peerId, trackerClient, port);
 
         coordinator.start(List.of(songId));
 

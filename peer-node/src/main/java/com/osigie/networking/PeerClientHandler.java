@@ -1,9 +1,10 @@
 package com.osigie.networking;
 
+import com.osigie.domain.NetworkType;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import utils.NetworkUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
@@ -13,9 +14,6 @@ public class PeerClientHandler extends ChannelInboundHandlerAdapter {
     private final String chunkId;
     private final Consumer<byte[]> onComplete;
 
-    private int expectedSize;
-    private ByteBuf buffer;
-
     public PeerClientHandler(String songId, String chunkId, Consumer<byte[]> onComplete) {
         this.songId = songId;
         this.chunkId = chunkId;
@@ -24,38 +22,34 @@ public class PeerClientHandler extends ChannelInboundHandlerAdapter {
 
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        String request = "GET_CHUNK|" + songId + "|" + chunkId + "\n";
-        ByteBuf buf = Unpooled.copiedBuffer(request, StandardCharsets.UTF_8);
-        ctx.channel().writeAndFlush(buf);
+    public void channelActive(ChannelHandlerContext ctx) {
+        ByteBuf buf = ctx.alloc().buffer();
+        buf.writeByte(NetworkType.GET_CHUNK.getValue());
+        NetworkUtil.writeString(buf, songId);
+        NetworkUtil.writeString(buf, chunkId);
+        ctx.writeAndFlush(buf);
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        ByteBuf buf = (ByteBuf) msg;
+        byte type = buf.readByte();
 
-        if (msg instanceof String header) {
-            String[] parts = header.trim().split("\\|");
-
-            if (parts[0].equals("CHUNK")) {
-                expectedSize = Integer.parseInt(parts[3]);
-                buffer = ctx.alloc().buffer(expectedSize);
-            }
-        } else if (msg instanceof ByteBuf data) {
-            buffer.writeBytes(data);
-
-            if (buffer.readableBytes() >= expectedSize) {
-                byte[] chunkData = new byte[expectedSize];
-                buffer.readBytes(chunkData);
-                System.out.println("Chunk received: " + chunkData.length + " bytes");
-                onComplete.accept(chunkData);
-                ctx.close();
-            }
+        if (type == NetworkType.CHUNK_DATA.getValue()) {
+            byte[] data = new byte[buf.readableBytes()];
+            buf.readBytes(data);
+            onComplete.accept(data);
+        } else if (type == NetworkType.NOT_FOUND.getValue()) {
+            onComplete.accept(null);
         }
+        buf.release();
+        ctx.close();
     }
 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println("Peer client exception caught");
         cause.printStackTrace();
         ctx.close();
     }

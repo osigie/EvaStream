@@ -8,22 +8,19 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
-import io.netty.handler.codec.string.StringDecoder;
-
-import java.nio.charset.StandardCharsets;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 
 public class PeerServer {
+
     private final int port;
     private final ChunkStore chunkStore;
-    private final String peerId;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    public PeerServer(int port, ChunkStore chunkStore, String peerId) {
+    public PeerServer(int port, ChunkStore chunkStore) {
         this.port = port;
         this.chunkStore = chunkStore;
-        this.peerId = peerId;
     }
 
     public void start() {
@@ -35,10 +32,14 @@ public class PeerServer {
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
-                        socketChannel.pipeline().addLast(new StringDecoder(StandardCharsets.UTF_8));
-                        socketChannel.pipeline().addLast(new PeerServerHandler(chunkStore, peerId));
+                    protected void initChannel(SocketChannel socketChannel) {
+                        socketChannel
+                                .pipeline()
+                                .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
+                        socketChannel
+                                .pipeline()
+                                .addLast(new LengthFieldPrepender(4));
+                        socketChannel.pipeline().addLast(new PeerServerHandler(chunkStore));
                     }
                 });
 
@@ -51,8 +52,4 @@ public class PeerServer {
         });
     }
 
-    public void shutdown() {
-        if (bossGroup != null) bossGroup.shutdownGracefully();
-        if (workerGroup != null) workerGroup.shutdownGracefully();
-    }
 }

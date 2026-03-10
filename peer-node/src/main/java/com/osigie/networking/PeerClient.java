@@ -7,10 +7,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
-import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 
-import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
 public class PeerClient {
@@ -25,16 +24,16 @@ public class PeerClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        socketChannel.pipeline().addLast(new LineBasedFrameDecoder(1024));
-                        socketChannel.pipeline().addLast(new StringDecoder(StandardCharsets.UTF_8));
+                        socketChannel.pipeline().addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
+                        socketChannel.pipeline().addLast(new LengthFieldPrepender(4));
                         socketChannel.pipeline().addLast(new PeerClientHandler(songId, chunkId, onComplete));
                     }
                 });
-        
+
         bootstrap.connect(host, port).addListener((ChannelFuture future) -> {
             if (!future.isSuccess()) {
                 System.out.println("Failed to connect to " + host + ":" + port);
-                future.cause().printStackTrace();
+                onComplete.accept(null);
             }
         });
     }
